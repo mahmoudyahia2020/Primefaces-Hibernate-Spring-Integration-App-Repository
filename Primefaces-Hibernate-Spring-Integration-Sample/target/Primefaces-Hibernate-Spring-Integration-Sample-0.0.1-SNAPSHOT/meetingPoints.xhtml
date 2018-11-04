@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Meeting Points</title>
+    </h:head>
+    <h:body>
+        <script type="text/javascript">
+            function emptyMeetingPointsFields() {
+                document.getElementById("meetingPointsForm:pointName").value = "";
+                document.getElementById("meetingPointsForm:pointType").value = "";
+            }
+        </script>
+        <h:form id="meetingPointsForm">
+            <p:scrollPanel style="width:800px;height:500px;" mode="native">
+                <p:growl for="meetingPointsGrowlMessages" id="meetingPointsGrowlMessages" showDetail="true" sticky="false" autoUpdate="true" />  
+                <h:panelGroup id="meetingPointsPanelGroup">
+                    <p:panel id="meetingPointsPanel" toggleable="true" toggleOrientation="vertical">
+                        <h:panelGrid id="meetingPointsGrid" columns="3" cellpadding="3">
+                            <p:outputLabel  id="meetingNameDispLbl" value="Meeting name:"/> 
+                            <p:outputLabel id="meetingNameDisp" value="#{meetingsBean.meetings.meetingName}"/> 
+                            <p:message id="meetingNameDispMsg" for="meetingNameDisp"/>
+
+                            <p:outputLabel value="Point name:"  for="pointName"></p:outputLabel>
+                            <p:inputText id="pointName" value="#{meetingsBean.meetingPoints.pointName}" required="true" requiredMessage="*"/>
+                            <p:message id="pointNameMsg" for="pointName"/>
+
+                            <p:outputLabel value="Point type:" for="pointType"></p:outputLabel>
+                            <h:selectOneMenu id="pointType" value="#{meetingsBean.meetingPoints.pointType}"
+                                             required="true" requiredMessage="*">
+                                <f:selectItem itemValue="" itemLabel="--select--" />
+                                <f:selectItems value="#{meetingsBean.pointTypesList}" var="pointType"
+                                               itemLabel="#{pointType.typeName}" itemValue="#{pointType.typeId}" />
+                            </h:selectOneMenu>
+                            <p:message id="pointTypeMsg" for="pointType"/>
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:commandButton id="savePointBtn" value="Save" action="#{meetingsBean.savePoint()}" oncomplete="emptyMeetingPointsFields();"
+                                         update="@form" process=":meetingPointsForm:meetingPointsPanelGroup">
+                        </p:commandButton>
+                    </p:panel>
+                </h:panelGroup>
+                <p:separator />
+                <h:panelGroup id="meetingPointsDetailsPanelGroup">
+                    <p:panel id="meetingPointsDetailsPanel" header="Meeting points Details">
+                        <h:panelGrid id="meetingPointsDetailsGrid" columns="1" cellpadding="1">
+                            <p:dataTable id="meetingPointsDetailsDataTable"
+                                         paginator="true" rows="2" rowsPerPageTemplate="2,3,5,10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         value="#{meetingsBean.meetingsPointsList}" var="meetingsPointObj">
+                                <p:column headerText="Meeting point title">
+                                    <h:outputText value="#{meetingsPointObj.pointName}" style="width:96%" />
+                                </p:column>
+                                <p:column headerText="Meeting point type">
+                                    <h:outputText value="#{meetingsPointObj.pointTypeDesc}" style="width:96%" />
+                                </p:column>
+                                <!-- Update -->
+                                <p:column headerText="Update">
+                                    <p:commandButton id="meetingPointUpdate" value="Update" update=":meetingPointsForm:meetingPointsPanelGroup" process=":meetingPointsForm:meetingPointsDetailsPanelGroup"
+                                                     actionListener="#{meetingsBean.updateMeetingPointsView(meetingsPointObj)}">
+                                    </p:commandButton>
+                                </p:column>
+                                <!-- Delete -->
+                                <p:column headerText="Delete">
+                                    <p:commandButton id="meetingPointDelete" value="Delete" update=":meetingPointsForm:meetingPointsDetailsPanelGroup" process=":meetingPointsForm:meetingPointsDetailsPanelGroup"
+                                                     actionListener="#{meetingsBean.deleteMeetingPoint(meetingsPointObj)}" oncomplete="emptyMeetingPointsFields();">
+                                        <p:confirm header="Confirmation" id="meetingPointConfirmationBtn" message="Are you sure to delete this point?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGroup>
+                <p:confirmDialog id="meetingPointConfirmationDialouge" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:scrollPanel>
+        </h:form>
+    </h:body>
+</html>
+

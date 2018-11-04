@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Meeting Members</title>
+    </h:head>
+    <h:body>
+        <script type="text/javascript">
+            function emptyMeetingMembersFields() {
+                document.getElementById("meetingMembersForm:meetingMemberName").value = "";
+                document.getElementById("meetingMembersForm:memberMeetingPosition").value = "";
+            }
+        </script>
+        <h:form id="meetingMembersForm">
+            <p:scrollPanel style="width:800px;height:500px;" mode="native">
+                <p:growl for="meetingMembersGrowlMessages" id="meetingMembersGrowlMessages" showDetail="true" sticky="false" autoUpdate="true" />  
+                <h:panelGroup id="meetingMembersPanelGroup">
+                    <p:panel id="meetingMembersPanel" toggleable="true" toggleOrientation="horizontal">
+                        <h:panelGrid id="meetingMembersGrid" columns="3" cellpadding="3">
+                            <p:outputLabel  id="meetingNameDispLbl" value="Meeting name:"/> 
+                            <p:outputLabel id="meetingNameDisp" value="#{meetingsBean.meetings.meetingName}"/> 
+                            <p:message id="meetingNameDispMsg" for="meetingNameDisp"/>
+
+                            <p:outputLabel  id="meetingAdminDispLbl" value="Meeting admin: "/> 
+                            <p:outputLabel id="meetingAdminDisp" value="#{meetingsBean.meetings.meetingAdminMember.name}"/> 
+                            <p:message id="meetingAdminDispMsg" for="meetingAdminDisp"/>
+
+                            <p:outputLabel  id="meetingMemberNameDispLbl" value="Meeting member: " for="meetingMemberName"/> 
+                            <h:selectOneMenu id="meetingMemberName" value="#{meetingsBean.meetingMembersTransaction.memberId.id}"
+                                             required="true" requiredMessage="*">
+                                <f:selectItem itemValue="" itemLabel="--select--" />
+                                <f:selectItems value="#{meetingsBean.membersMeetingList}" var="member"
+                                               itemLabel="#{member.name}" itemValue="#{member.id}"/>
+                            </h:selectOneMenu>
+                            <p:message id="meetingMemberNameMsg" for="meetingMemberName"/>
+
+                            <p:outputLabel value="Member meeting position:" for="memberMeetingPosition"></p:outputLabel>
+                            <h:selectOneMenu id="memberMeetingPosition" value="#{meetingsBean.meetingMembersTransaction.memberTypeId}"
+                                             required="true" requiredMessage="*">
+                                <f:selectItem itemValue="" itemLabel="--select--" />
+                                <f:selectItems value="#{meetingsBean.memberPositionsList}" var="memberPosition"
+                                               itemLabel="#{memberPosition.typeName}" itemValue="#{memberPosition.typeId}" />
+                            </h:selectOneMenu>
+                            <p:message id="memberPositionMsg" for="memberMeetingPosition"/>
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:commandButton id="saveMeetingMembersBtn" value="Save" action="#{meetingsBean.saveMeetingMember()}" oncomplete="emptyMeetingMembersFields();" 
+                                         update=":meetingMembersForm" process=":meetingMembersForm:meetingMembersPanelGroup">
+                        </p:commandButton>
+                    </p:panel>
+                </h:panelGroup>
+                <p:separator />
+                <h:panelGroup id="meetingMembersDetailsPanelGroup">
+                    <p:panel id="meetingMembersDetailsPanel" header="Meeting members Details">
+                        <h:panelGrid id="meetingMembersDetailsGrid" columns="1" cellpadding="1">
+                            <p:dataTable id="meetingMembersDetailsDataTable"
+                                         paginator="true" rows="2" rowsPerPageTemplate="2,3,5"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         value="#{meetingsBean.meetingMembersTransactionsList}" var="meetingMemberTransactionObj">
+                                <p:column headerText="Meeting name: ">
+                                    <h:outputText value="#{meetingMemberTransactionObj.meetingId.meetingName}"/>
+                                </p:column>
+                                <p:column headerText="Admin name: ">
+                                    <h:outputText value="#{meetingMemberTransactionObj.meetingId.meetingAdminMember.name}"/>
+                                </p:column>
+                                <p:column headerText="Meeting member name: ">
+                                    <h:outputText value="#{meetingMemberTransactionObj.memberId.name}"/>
+                                </p:column>
+                                <p:column headerText="Meeting member position: ">
+                                    <h:outputText value="#{meetingMemberTransactionObj.memberPosition}"/>
+                                </p:column>
+                                <!-- Update -->
+                                <p:column headerText="Update">
+                                    <p:commandButton id="meetingMembersUpdate" value="Update" update=":meetingMembersForm:meetingMembersPanelGroup" process=":meetingMembersForm:meetingMembersDetailsPanelGroup"
+                                                     actionListener="#{meetingsBean.updateMeetingMembersView(meetingMemberTransactionObj)}">
+                                    </p:commandButton>
+                                </p:column>
+                                <!-- Delete -->
+                                <p:column headerText="Delete">
+                                    <p:commandButton id="meetingMembersDelete" value="Delete" update=":meetingMembersForm:meetingMembersDetailsPanelGroup :meetingMembersForm:meetingMemberName" process=":meetingMembersForm:meetingMembersDetailsPanelGroup"
+                                                     actionListener="#{meetingsBean.deleteMeetingMembers(meetingMemberTransactionObj)}" oncomplete="emptyMeetingMembersFields();" >
+                                        <p:confirm header="Confirmation" id="meetingMembersConfirmationBtn" message="Are you sure to delete this point?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGroup>
+                <p:confirmDialog id="meetingMembersConfirmationDialouge" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:scrollPanel>
+        </h:form>
+    </h:body>
+</html>
+

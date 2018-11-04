@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Welcome</title>
+    </h:head>
+    <h:body>
+        <h:form id="welcomeForm">
+            <h:panelGroup id="welcomeFormPanelGroup">
+                <p:panel id="welcomePanel" toggleable="true" toggleOrientation="horizontal" header="Welcome to meetings organization system">
+                    <h:panelGrid id="welcomeGrid" columns="2" cellpadding="5">
+                        <h:commandLink id="registerMemberBtn" value="Register new members" action="#{meetingsBean.registerMember()}"/>
+                        <h:commandLink id="registerMeetingBtn" value="Register new meeting" action="#{meetingsBean.registerMeeting()}"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:panelGroup>
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf15300092587960" configfile="/Primefaces-Hibernate-Spring-Integration-Sample/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" id="pf15413353178729" outlinks="pf154133531787210 pf154133531787211 pf154133531787212 pf154133619907818" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="meetings.xhtml" id="pf154133531787214" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf154133531787210" path="meetings.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="registerMembers.xhtml" id="pf154133531787215" referenceLink="//@navigationRule.0/@navigationCase.3/@toViewId|" inlinks="pf154133531787211" path="registerMembers.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="meetingMembers.xhtml" id="pf154133531787216" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf154133531787212" path="meetingMembers.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="meetingPoints.xhtml" id="pf154133619907819" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf154133619907818" path="meetingPoints.xhtml"/>
+  <links id="pf154133531787210" target="pf154133531787214" source="pf15413353178729" outcome="meetings"/>
+  <links id="pf154133531787211" target="pf154133531787215" source="pf15413353178729" outcome="registerMembers"/>
+  <links id="pf154133531787212" target="pf154133531787216" source="pf15413353178729" outcome="meetingMembers"/>
+  <links id="pf154133619907818" target="pf154133619907819" source="pf15413353178729" outcome="meetingPoints"/>
+</pageflow:Pageflow>

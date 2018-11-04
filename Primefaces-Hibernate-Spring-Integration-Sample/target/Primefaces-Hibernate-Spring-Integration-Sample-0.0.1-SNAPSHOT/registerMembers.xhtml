@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Register new members</title>
+    </h:head>
+    <h:body>
+        <h:form id="membersForm">
+            <p:growl for="membersGrowlMessages" id="membersGrowlMessages" showDetail="true" sticky="true" autoUpdate="true"  />  
+            <h:panelGroup id="membersPanelGroup">
+                <p:panel id="membersPanel" toggleable="true" toggleOrientation="horizontal" header="Members">
+                    <h:panelGrid id="membersGrid" columns="3" cellpadding="3">
+                        <p:outputLabel value="member name:"  for="membersName"></p:outputLabel>
+                        <p:inputText id="membersName" value="#{meetingsBean.member.name}" required="true" requiredMessage="*"/>
+                        <p:message id="membersNameMsg" for="membersName"/>
+
+                        <p:outputLabel value="member job:"  for="memberJob"></p:outputLabel>
+                        <p:inputText id="memberJob" value="#{meetingsBean.member.job}" required="true" requiredMessage="*"/>
+                        <p:message id="memberJobMsg" for="memberJob"/>
+                    </h:panelGrid>
+                    <p:separator />
+                    <p:commandButton id="saveMeetingBtn" value="Save" action="#{meetingsBean.saveMember()}" update="@form" process=":membersForm:membersPanelGroup"/>
+                </p:panel>
+            </h:panelGroup>
+            <p:separator />
+            <h:panelGroup id="membersDetailsPanelGroup">
+                <p:panel id="membersDetailsPanel" header="Members details">
+                    <h:panelGrid id="membersDetailsGrid" columns="1" cellpadding="1">
+                        <p:dataTable id="membersDetailsDataTable" paginator="true" rows="2" rowsPerPageTemplate="2,3,5"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     value="#{meetingsBean.membersList}" var="membersObj">
+                            <p:column headerText="Member name">
+                                <h:outputText value="#{membersObj.name}" style="width:96%" />
+                            </p:column>
+                            <p:column headerText="Member job">
+                                <h:outputText value="#{membersObj.job}" style="width:96%"/>
+                            </p:column>
+                            <!-- Update -->
+                            <p:column headerText="Update">
+                                <p:commandButton id="membersUpdate" value="Update" update=":membersForm:membersPanelGroup" process=":membersForm:membersDetailsPanelGroup"
+                                                 actionListener="#{meetingsBean.updateMemberView(membersObj)}" style="width:96%">
+                                </p:commandButton>
+                            </p:column>
+                            <!-- Delete -->
+                            <p:column headerText="Delete">
+                                <p:commandButton id="memberDelete" value="Delete" update=":membersForm:membersDetailsPanelGroup" process=":membersForm:membersDetailsPanelGroup"
+                                                 actionListener="#{meetingsBean.deleteMember(membersObj)}" style="width:96%">
+                                    <p:confirm  id="membersConfirmationBtn" header="Confirmation" message="Are you sure to delete this member?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </p:panel>
+            </h:panelGroup> 
+            <p:confirmDialog  id="membersConfirmationDialouge" global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <h:commandLink id="goToMainPageLink" value="Go to main page" action="#{meetingsBean.goToMainPage()}" immediate="true"/>
+        </h:form>
+    </h:body>         
+</html>
